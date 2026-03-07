@@ -1,5 +1,6 @@
 export enum ActionType {
   CLICK = 'click',
+  //pick theo 1 lựa chọn mặc định
   PICK = 'pick',
   //cái action type cho loại câu hỏi cho chọn ngẫu nhiên
   RANDOM_PICK = 'randomPick',

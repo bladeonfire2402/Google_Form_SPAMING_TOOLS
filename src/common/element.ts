@@ -89,7 +89,7 @@ const randomPickElement = async (elements: ElementHandle[], actionType: ActionTy
   }
 
   const range =
-    actionType === ActionType.RANDOM_PICK_WITH_OTHER_OPTION ? elements.length : elements.length - 1;
+    actionType === ActionType.RANDOM_PICK_WITH_OTHER_OPTION ? elements.length - 1 : elements.length;
 
   // Chọn ngẫu nhiên một index
   const randomIndex = Math.floor(Math.random() * range);

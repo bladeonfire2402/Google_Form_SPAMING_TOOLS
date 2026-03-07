@@ -14,13 +14,12 @@ const processHandler = async (processNode: ProcessNode, page: Page) => {
       await processClickHander(processNode, page);
       break;
     case ActionType.PICK:
-      // TODO: Implement pick action
+      await processPickHandler(processNode, page);
       break;
     case ActionType.PAUSE_A_WHILE_FOR_LOAD:
       await processPauseALittleForLoadHander(page);
       break;
     case ActionType.RANDOM_PICK:
-      // TODO: Implement random pick action
       await processRandomPickHander(processNode, page);
       break;
     default:
@@ -61,6 +60,37 @@ const processRandomPickHander = async (processNode: ProcessNode, page: Page) => 
   if (!options || options.length === 0) return;
 
   await randomPickElement(options, processNode.action.type);
+};
+
+const processPickHandler = async (processNode: ProcessNode, page: Page) => {
+  if (!processNode.text) return;
+
+  if (!processNode.defaultPickOption) {
+    return;
+  }
+
+  const element = await getElementByTitle(page, processNode.text);
+  if (!element) return;
+
+  // Lấy wrapper của element 4 cấp cha
+  const wrapperHandle = await element.evaluateHandle(
+    (el) => el.parentElement?.parentElement?.parentElement?.parentElement
+  );
+  if (!wrapperHandle) return;
+
+  // Convert JSHandle to ElementHandle
+  const wrapper = wrapperHandle.asElement();
+  if (!wrapper) return;
+
+  const options = await getElementsRadioOptionsByParent(wrapper);
+  if (!options || options.length === 0) return;
+
+  const pickIndex = processNode.defaultPickOption ?? 1;
+  const pickOption = options[pickIndex];
+
+  if (pickOption) {
+    await pickOption.click();
+  }
 };
 
 export { processHandler };

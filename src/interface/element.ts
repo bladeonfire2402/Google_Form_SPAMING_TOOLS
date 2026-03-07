@@ -21,5 +21,6 @@ export interface ProcessNode {
   text?: string;
   xPath?: string;
   rateControl?: RateControl;
-  otherInputOptions?: string[];
+  defaultPickOption?: number; // chỉ dùng cho action type là PICK
+  otherInputOptions?: string[]; // chỉ dùng cho action type là RANDOM_PICK_WITH_OTHER_OPTION
 }

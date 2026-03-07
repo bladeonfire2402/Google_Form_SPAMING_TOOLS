@@ -1,5 +1,10 @@
 import { Page } from 'puppeteer';
-import launchBrowser, { openWebsite, terminateBrowser, waitPageLoad } from './common/index.js';
+import launchBrowser, {
+  openWebsite,
+  terminateBrowser,
+  waitForAllLoad,
+  waitPageLoad,
+} from './common/index.js';
 import { processHandler } from './common/process.js';
 import { processFlowConfig } from './config/process.config.js';
 import { webSiteUrl } from './constant/index.js';
@@ -7,8 +12,12 @@ import { webSiteUrl } from './constant/index.js';
 async function main() {
   const browser = await launchBrowser();
   const page = await openWebsite(browser, webSiteUrl);
-  await waitPageLoad();
+  await waitForAllLoad(page);
   await formFillProcess(page);
+  await waitPageLoad();
+  await waitPageLoad();
+  await waitPageLoad();
+
   await terminateBrowser(browser);
 }
 
