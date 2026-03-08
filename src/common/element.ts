@@ -3,19 +3,64 @@ import { processConfig } from '../config/process.config.js';
 import { ActionType } from '../constant/enum.js';
 
 const getElementByTitle = async (page: Page, title: string) => {
-  const elements = await page.waitForSelector(`text/${title}`, {
-    timeout: processConfig.baseAwaitTimeout,
-  });
-  return elements;
+  try {
+    const elements = await page.waitForSelector(`text/${title}`, {
+      timeout: processConfig.baseAwaitTimeout,
+    });
+
+    return elements;
+  } catch (error) {
+    console.error('Error getting element by title:', error);
+    return null;
+  }
 };
 
 const getElementByXPath = async (page: Page, xPath: string) => {
-  const element = await page.waitForSelector(xPath, { timeout: processConfig.baseAwaitTimeout });
+  try {
+    // Thêm tiền tố xpath/ nếu chưa có
+    let xPathSelector = xPath.trim();
+    if (!xPathSelector.startsWith('xpath/')) {
+      xPathSelector = `xpath/${xPathSelector}`;
+    }
 
-  if (!element) {
-    console.log('Element not found');
+    const element = await page.waitForSelector(xPathSelector, {
+      timeout: processConfig.baseAwaitTimeout,
+    });
+
+    if (!element) {
+      console.log('Element not found');
+      return null;
+    }
+
+    return element;
+  } catch (error) {
+    console.error('Error getting element by XPath:', error);
+    return null;
   }
-  return element;
+};
+
+const getWrapperElementByParent = async (child: ElementHandle, level?: number) => {
+  level = level || 4;
+
+  const wrapper = await child.evaluateHandle((el, levels) => {
+    let current = el;
+    // Lặp lại việc truy cập parentElement theo số level
+    for (let i = 0; i < levels; i++) {
+      if (!current?.parentElement) {
+        return null;
+      }
+      current = current.parentElement;
+    }
+    return current;
+  }, level);
+
+  const wrapperElement = wrapper.asElement();
+  if (!wrapperElement) {
+    console.log('Wrapper element not found');
+    return null;
+  }
+
+  return wrapperElement;
 };
 
 const getElementsRadioOptionsByParent = async (parent: ElementHandle) => {
@@ -157,6 +202,7 @@ export {
   getElementByTitle,
   getElementByXPath,
   logElementInfo,
+  getWrapperElementByParent,
   getElementsRadioOptionsByParent,
   randomPickElement,
   randomLikeHeartPickElement,

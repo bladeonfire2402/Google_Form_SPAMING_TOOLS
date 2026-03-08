@@ -8,18 +8,39 @@ import launchBrowser, {
 import { processHandler } from './common/process.js';
 import { processFlowConfig } from './config/process.config.js';
 import { webSiteUrl } from './constant/index.js';
+import { playNotificationSound } from './common/sound.js';
+
+const runTimes = 6;
 
 async function main() {
-  const browser = await launchBrowser();
-  const page = await openWebsite(browser, webSiteUrl);
-  await waitForAllLoad(page);
-  await formFillProcess(page);
-  await waitPageLoad();
-  await waitPageLoad();
-  await waitPageLoad();
-
-  await terminateBrowser(browser);
+  for (let i = 0; i < runTimes; i++) {
+    await Promise.all([runProcess(), runProcess(), runProcess(), runProcess(), runProcess()]);
+  }
+  await playNotificationSound();
+  console.log(`Đã chạy xong tất cả các lần chạy ${runTimes * 5} lần`);
 }
+
+const runProcess = async () => {
+  let browser;
+  try {
+    browser = await launchBrowser();
+    const page = await openWebsite(browser, webSiteUrl);
+    await waitForAllLoad(page);
+    await formFillProcess(page);
+    await waitPageLoad();
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error('Error in runProcess:', errorMessage);
+    if (error instanceof Error) {
+      console.error('Error stack:', error.stack);
+    }
+    throw error;
+  } finally {
+    if (browser) {
+      await terminateBrowser(browser);
+    }
+  }
+};
 
 const formFillProcess = async (page: Page) => {
   for (let i = 0; i < processFlowConfig.length; i++) {

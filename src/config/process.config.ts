@@ -5,7 +5,7 @@ const processConfig = {
   baseAwaitTimeout: 10000,
   baseTimeout: 30000,
   waitPageLoad: 10000,
-  shortTimeout: 1000,
+  shortTimeout: 2000,
 };
 
 const processFlowConfig: ProcessNode[] = [
@@ -21,12 +21,22 @@ const processFlowConfig: ProcessNode[] = [
     },
     text: 'Tiếp',
   },
+  {
+    action: {
+      type: ActionType.SHORT_TIMEOUT,
+    },
+  },
   //section 1
   {
     action: {
       type: ActionType.LOG_SECTION,
     },
     text: 'Section 1',
+  },
+  {
+    action: {
+      type: ActionType.SHORT_TIMEOUT,
+    },
   },
   {
     action: {
@@ -71,6 +81,11 @@ const processFlowConfig: ProcessNode[] = [
   //section 2
   {
     action: {
+      type: ActionType.SHORT_TIMEOUT,
+    },
+  },
+  {
+    action: {
       type: ActionType.LOG_SECTION,
     },
     text: 'Section 2',
@@ -99,6 +114,11 @@ const processFlowConfig: ProcessNode[] = [
     text: 'Tiếp',
   },
   //section 3
+  {
+    action: {
+      type: ActionType.SHORT_TIMEOUT,
+    },
+  },
   {
     action: {
       type: ActionType.LOG_SECTION,
@@ -223,6 +243,25 @@ const processFlowConfig: ProcessNode[] = [
       type: ActionType.RANDOM_LIKE_HEART_PICK,
     },
     text: 'PI5:',
+  },
+  {
+    action: {
+      type: ActionType.CLICK,
+    },
+    text: 'Tiếp',
+  },
+  //end section
+  {
+    action: {
+      type: ActionType.PAUSE_A_WHILE_FOR_LOAD,
+    },
+  },
+  {
+    action: {
+      type: ActionType.CLICK,
+    },
+    text: 'Gửi',
+    xPath: '/html/body/div/div[2]/form/div[2]/div/div[3]/div[1]/div[1]/div[2]',
   },
 ];
 
