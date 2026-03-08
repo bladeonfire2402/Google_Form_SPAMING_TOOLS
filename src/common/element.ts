@@ -6,9 +6,6 @@ const getElementByTitle = async (page: Page, title: string) => {
   const elements = await page.waitForSelector(`text/${title}`, {
     timeout: processConfig.baseAwaitTimeout,
   });
-  if (!elements) {
-    console.log('Element not found');
-  }
   return elements;
 };
 
@@ -26,11 +23,13 @@ const getElementsRadioOptionsByParent = async (parent: ElementHandle) => {
   let options = await parent.$$('div[role="radio"]');
 
   if (!options || options.length === 0) {
-    options = await parent.$$('role="radio"');
+    // Sửa selector: cần dấu ngoặc vuông [role="radio"] thay vì role="radio"
+    options = await parent.$$('[role="radio"]');
   }
 
   if (!options || options.length === 0) {
     console.log('No radio options found');
+    logElementInfo(parent);
   }
   return options; // Trả về mảng ElementHandle[]
 };
@@ -88,8 +87,10 @@ const randomPickElement = async (elements: ElementHandle[], actionType: ActionTy
     return null;
   }
 
-  const range =
-    actionType === ActionType.RANDOM_PICK_WITH_OTHER_OPTION ? elements.length - 1 : elements.length;
+  let range = elements.length;
+  if (actionType === ActionType.RANDOM_PICK_WITHOUT_OTHER_OPTION) {
+    range = elements.length - 1;
+  }
 
   // Chọn ngẫu nhiên một index
   const randomIndex = Math.floor(Math.random() * range);
@@ -105,10 +106,58 @@ const randomPickElement = async (elements: ElementHandle[], actionType: ActionTy
   return;
 };
 
+const randomLikeHeartPickElement = async (elements: ElementHandle[]) => {
+  if (!elements || elements.length === 0) {
+    console.log('No elements to pick from');
+    return null;
+  }
+
+  const rate = Math.random();
+  let index = 0;
+
+  if (rate < 0.2) {
+    //20%
+    index = Math.floor(Math.random() * 2) + 1;
+  } else {
+    index = Math.floor(Math.random() * 3) + 3; // 3-5
+  }
+
+  const arrayIndex = index - 1;
+
+  // Kiểm tra index có hợp lệ không
+  if (arrayIndex < 0 || arrayIndex >= elements.length) {
+    console.log(`Invalid index: ${arrayIndex}, array length: ${elements.length}`);
+    // Fallback: chọn random từ tất cả elements
+    const randomIndex = Math.floor(Math.random() * elements.length);
+    const selectedElement = elements[randomIndex];
+    if (selectedElement) {
+      await selectedElement.click();
+    }
+    return null;
+  }
+
+  const selectedElement = elements[arrayIndex];
+
+  if (!selectedElement) {
+    console.log('Selected element is null or undefined');
+    return null;
+  }
+
+  try {
+    await selectedElement.click();
+  } catch (error) {
+    console.error('Error clicking element:', error);
+    throw error;
+  }
+
+  return null;
+};
+
 export {
   getElementByTitle,
   getElementByXPath,
   logElementInfo,
   getElementsRadioOptionsByParent,
   randomPickElement,
+  randomLikeHeartPickElement,
 };
