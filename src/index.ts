@@ -1,3 +1,4 @@
+import { ProcessNode } from './interface/element';
 import { Page } from 'puppeteer';
 import launchBrowser, {
   openWebsite,
@@ -6,7 +7,7 @@ import launchBrowser, {
   waitPageLoad,
 } from './common/index.js';
 import { processHandler } from './common/process.js';
-import { processFlowConfig } from './config/process.config.js';
+import { thuyLinhFlowConfig } from './config/process.config.js';
 import { webSiteUrl } from './constant/index.js';
 import { playNotificationSound } from './common/sound.js';
 
@@ -14,10 +15,10 @@ const runTimes = 6;
 
 async function main() {
   for (let i = 0; i < runTimes; i++) {
-    await Promise.all([runProcess(), runProcess(), runProcess(), runProcess(), runProcess()]);
+    await Promise.all([runProcess()]);
   }
   await playNotificationSound();
-  console.log(`Đã chạy xong tất cả các lần chạy ${runTimes * 5} lần`);
+  console.log(`Đã chạy xong tất cả các lần chạy ${runTimes} lần`);
 }
 
 const runProcess = async () => {
@@ -26,7 +27,7 @@ const runProcess = async () => {
     browser = await launchBrowser();
     const page = await openWebsite(browser, webSiteUrl);
     await waitForAllLoad(page);
-    await formFillProcess(page);
+    await formFillProcess(page, thuyLinhFlowConfig);
     await waitPageLoad();
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
@@ -42,7 +43,7 @@ const runProcess = async () => {
   }
 };
 
-const formFillProcess = async (page: Page) => {
+const formFillProcess = async (page: Page, processFlowConfig: ProcessNode[]) => {
   for (let i = 0; i < processFlowConfig.length; i++) {
     const node = processFlowConfig[i];
     if (!node) {

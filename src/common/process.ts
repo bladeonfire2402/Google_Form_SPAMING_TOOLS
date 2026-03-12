@@ -4,8 +4,10 @@ import { ActionType } from '../constant/enum.js';
 import {
   getElementByTitle,
   getElementByXPath,
+  getElementsCheckboxOptionsByParent,
   getElementsRadioOptionsByParent,
   getWrapperElementByParent,
+  randomCheckboxPickElement,
   randomLikeHeartPickElement,
   randomPickElement,
 } from './element.js';
@@ -42,6 +44,9 @@ const processHandler = async (processNode: ProcessNode, page: Page) => {
       break;
     case ActionType.SHORT_TIMEOUT:
       await processShortTimeoutHander();
+      break;
+    case ActionType.RANDOM_CHECKBOX_PICK:
+      await processRandomCheckboxPickHandler(processNode, page);
       break;
     default:
       console.warn('Unknown action type:', processNode.action.type);
@@ -141,6 +146,24 @@ const processRandomPickHander = async (processNode: ProcessNode, page: Page) => 
   if (!options || options.length === 0) return;
 
   await randomPickElement(options, processNode.action.type);
+};
+
+const processRandomCheckboxPickHandler = async (processNode: ProcessNode, page: Page) => {
+  if (!processNode.text) return;
+
+  const element = await getElementByTitle(page, processNode.text);
+  if (!element) return;
+
+  const wrapperHandle = await getWrapperElementByParent(element, processNode.level);
+  if (!wrapperHandle) return;
+
+  const wrapper = wrapperHandle.asElement();
+  if (!wrapper) return;
+
+  const options = await getElementsCheckboxOptionsByParent(wrapper);
+  if (!options || options.length === 0) return;
+
+  await randomCheckboxPickElement(options);
 };
 
 const processPickHandler = async (processNode: ProcessNode, page: Page) => {

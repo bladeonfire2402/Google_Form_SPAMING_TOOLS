@@ -17,4 +17,6 @@ export enum ActionType {
   LOG_SECTION = 'logSection',
   //short timeout
   SHORT_TIMEOUT = 'shortTimeout',
+  //checkbox
+  RANDOM_CHECKBOX_PICK = 'randomCheckboxPick',
 }

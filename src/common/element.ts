@@ -79,6 +79,21 @@ const getElementsRadioOptionsByParent = async (parent: ElementHandle) => {
   return options; // Trả về mảng ElementHandle[]
 };
 
+const getElementsCheckboxOptionsByParent = async (parent: ElementHandle) => {
+  let options = await parent.$$('[role="checkbox"]');
+
+  //double check
+  if (!options || options.length === 0) {
+    options = await parent.$$('[role="radio"]');
+  }
+
+  if (!options || options.length === 0) {
+    console.log('No radio options found');
+    logElementInfo(parent);
+  }
+  return options;
+};
+
 const logElementInfo = async (element: ElementHandle) => {
   if (!element) {
     console.log('Element is null or undefined');
@@ -124,6 +139,34 @@ const logElementInfo = async (element: ElementHandle) => {
   } catch (error) {
     console.error('Error logging element info:', error);
   }
+};
+
+const randomCheckboxPickElement = async (elements: ElementHandle[]) => {
+  if (!elements || elements.length === 0) {
+    console.log('No elements to pick from');
+    return null;
+  }
+
+  const onClickElements: any[] = [];
+  const randomRange = Math.floor(Math.random() * elements.length);
+
+  for (let i = 0; i < randomRange; i++) {
+    const randomIndex = Math.floor(Math.random() * elements.length);
+    const selectedElement = elements[randomIndex];
+    const isClick = onClickElements.includes(randomIndex);
+    if (isClick) {
+      //bỏ qua lần chọn này vì đã click rồi
+      i--;
+      //reset lần chọn
+      continue;
+    }
+    if (selectedElement) {
+      onClickElements.push(randomIndex);
+      await selectedElement.click();
+    }
+  }
+
+  return null;
 };
 
 const randomPickElement = async (elements: ElementHandle[], actionType: ActionType) => {
@@ -206,4 +249,6 @@ export {
   getElementsRadioOptionsByParent,
   randomPickElement,
   randomLikeHeartPickElement,
+  getElementsCheckboxOptionsByParent,
+  randomCheckboxPickElement,
 };

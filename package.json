@@ -8,6 +8,7 @@
     "build": "tsc",
     "start": "node --loader ts-node/esm src/index.ts",
     "dev": "node --loader ts-node/esm src/index.ts",
+    "dev:thuylinh": "npm run build && node dist/index.js --thuylinh",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
     "format": "prettier --write \"src/**/*.ts\"",

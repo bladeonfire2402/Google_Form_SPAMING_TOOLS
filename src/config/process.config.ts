@@ -265,4 +265,134 @@ const processFlowConfig: ProcessNode[] = [
   },
 ];
 
-export { processFlowConfig, processConfig };
+const thuyLinhFlowConfig: ProcessNode[] = [
+  {
+    action: {
+      type: ActionType.LOG_SECTION,
+    },
+    text: 'Section Mở Đầu ',
+  },
+  {
+    action: {
+      type: ActionType.PAUSE_A_WHILE_FOR_LOAD,
+    },
+  },
+  {
+    action: {
+      type: ActionType.SHORT_TIMEOUT,
+    },
+  },
+  {
+    action: {
+      type: ActionType.PICK,
+    },
+    defaultPickOption: 0,
+    text: '1.',
+  },
+  {
+    action: {
+      type: ActionType.CLICK,
+    },
+    text: 'Tiếp',
+  },
+  {
+    action: {
+      type: ActionType.LOG_SECTION,
+    },
+    text: 'Section 1 ',
+  },
+  {
+    action: {
+      type: ActionType.SHORT_TIMEOUT,
+    },
+  },
+  {
+    action: {
+      type: ActionType.PAUSE_A_WHILE_FOR_LOAD,
+    },
+  },
+  {
+    action: {
+      type: ActionType.RANDOM_PICK,
+    },
+    text: '1. Age/',
+  },
+  {
+    action: {
+      type: ActionType.RANDOM_PICK,
+    },
+    text: '2. Gender/ Giới tính',
+  },
+  {
+    action: {
+      type: ActionType.RANDOM_PICK,
+    },
+    text: '3. Nghề nghiệp/ Occupation',
+  },
+  {
+    action: {
+      type: ActionType.RANDOM_PICK,
+    },
+    text: '4. Khu vực sinh sống/ Living area',
+  },
+  {
+    action: {
+      type: ActionType.RANDOM_PICK,
+    },
+    text: '5. Thu nhập hàng tháng/ Monthly income',
+  },
+  {
+    action: {
+      type: ActionType.RANDOM_PICK,
+    },
+    text: 'Tần suất bạn uống nước ngọt là bao lâu/ How often do you consumer soft drinks?',
+  },
+  {
+    action: {
+      type: ActionType.CLICK,
+    },
+    text: 'Tiếp',
+  },
+  {
+    action: {
+      type: ActionType.LOG_SECTION,
+    },
+    text: 'Section 2 ',
+  },
+  {
+    action: {
+      type: ActionType.PAUSE_A_WHILE_FOR_LOAD,
+    },
+  },
+  {
+    action: {
+      type: ActionType.SHORT_TIMEOUT,
+    },
+  },
+  {
+    action: {
+      type: ActionType.RANDOM_PICK,
+    },
+    text: 'Tần suất bạn sử dụng YouTube là bao lâu',
+  },
+  {
+    action: {
+      type: ActionType.RANDOM_PICK,
+    },
+    text: 'Khi xem video trên YouTube, bạn gặp quảng cáo nước ngọt với tần suất như thế nào',
+  },
+  {
+    action: {
+      type: ActionType.RANDOM_CHECKBOX_PICK,
+    },
+    text: 'Loại hình quảng cáo nước ngọt nào bạn thường hay gặp phải',
+  },
+  {
+    action: {
+      type: ActionType.RANDOM_PICK,
+    },
+    text: 'Bạn thường làm gì khi quảng cáo nước ngọt xuất hiện trên YouTube?',
+  },
+];
+
+export { processFlowConfig, processConfig, thuyLinhFlowConfig };
